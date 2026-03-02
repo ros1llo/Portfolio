@@ -1,7 +1,5 @@
 /* ============================================================
    VARIABLES
-   Guardamos aquí todos los valores que repetiremos en el CSS.
-   Si quieres cambiar el color principal, solo lo tocas aquí.
 ============================================================ */
 :root {
   --negro: #0a0a0a;
@@ -10,7 +8,6 @@
   --gris-medio: #999990;
   --gris-oscuro: #2a2a2a;
   --acento: #c8ff00;
-
   --fuente-titulo: 'DM Serif Display', serif;
   --fuente-codigo: 'DM Mono', monospace;
   --fuente-texto: 'DM Sans', sans-serif;
@@ -18,8 +15,6 @@
 
 /* ============================================================
    RESET
-   El navegador añade márgenes y estilos por defecto que
-   no queremos. Con esto los eliminamos todos.
 ============================================================ */
 *, *::before, *::after {
   margin: 0;
@@ -27,10 +22,7 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-  font-size: 16px;
-}
+html { scroll-behavior: smooth; font-size: 16px; }
 
 body {
   background-color: var(--negro);
@@ -41,34 +33,67 @@ body {
   overflow-x: hidden;
 }
 
-/* ============================================================
-   TIPOGRAFÍA
-   Importamos las fuentes de Google Fonts.
-   DM Serif Display → títulos elegantes con serifa
-   DM Mono         → etiquetas y código, look técnico
-   DM Sans         → texto corrido, limpio y legible
-============================================================ */
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap');
 
-h1, h2, h3 {
-  font-family: var(--fuente-titulo);
-  font-weight: 400;
-  line-height: 1.1;
+h1, h2, h3 { font-family: var(--fuente-titulo); font-weight: 400; line-height: 1.1; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+
+/* ============================================================
+   CURSOR PERSONALIZADO
+   position: fixed    -> siempre visible, ignora el scroll
+   pointer-events: none -> no bloquea clics del usuario
+   mix-blend-mode: difference -> efecto invertido sobre texto
+============================================================ */
+#cursor {
+  width: 12px;
+  height: 12px;
+  background: var(--acento);
+  border-radius: 50%;
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+  mix-blend-mode: difference;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* ============================================================
+   ANIMACIONES DE SCROLL
+   reveal: estado inicial (invisible, desplazado abajo)
+   reveal.visible: estado final (visible, en su sitio)
+   JS añade la clase "visible" cuando el elemento es visto
+============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
 }
 
-ul {
-  list-style: none;
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   ANIMACIONES DE ENTRADA (hero)
+   @keyframes define el "camino" de la animacion
+   animation: nombre duracion easing delay fill-mode
+   forwards -> al terminar, mantiene el estado final
+============================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* ============================================================
    LAYOUT BASE
-   Cada sección tiene un ancho máximo y padding para respirar.
-   margin: 0 auto → centra el contenido horizontalmente.
 ============================================================ */
 section {
   max-width: 1200px;
@@ -76,11 +101,35 @@ section {
   padding: 8rem 4rem;
 }
 
+.divisor {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 1px;
+  background: var(--gris-oscuro);
+}
+
+.seccion-label {
+  font-family: var(--fuente-codigo);
+  font-size: 0.75rem;
+  color: var(--acento);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.seccion-titulo {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  margin-bottom: 1.5rem;
+}
+
+.seccion-titulo em {
+  font-style: italic;
+  color: var(--gris-medio);
+}
+
 /* ============================================================
-   NAVEGACIÓN
-   position: fixed     → se queda fija al hacer scroll
-   backdrop-filter     → efecto cristal/blur en el fondo
-   z-index: 100        → se pone por encima de todo
+   NAVEGACION
 ============================================================ */
 nav {
   position: fixed;
@@ -93,37 +142,46 @@ nav {
   border-bottom: 1px solid rgba(255,255,255,0.06);
   backdrop-filter: blur(20px);
   background: rgba(10,10,10,0.7);
+  transition: background 0.3s ease;
 }
 
-nav a {
+.nav-logo {
   font-family: var(--fuente-codigo);
   font-size: 0.85rem;
   color: var(--acento);
   letter-spacing: 0.1em;
 }
 
-nav ul {
+.nav-links {
   display: flex;
   gap: 2.5rem;
 }
 
-nav ul a {
+.nav-links a {
   font-family: var(--fuente-codigo);
   font-size: 0.8rem;
   color: var(--gris-medio);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   transition: color 0.3s ease;
+  position: relative;
 }
 
-nav ul a:hover {
-  color: var(--blanco);
+/* Linea animada bajo cada enlace del menu */
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: var(--acento);
+  transition: width 0.3s ease;
 }
+
+.nav-links a:hover { color: var(--blanco); }
+.nav-links a:hover::after { width: 100%; }
 
 /* ============================================================
    HERO
-   min-height: 100vh → ocupa toda la pantalla al cargar
-   display: flex + flex-direction: column → apila el contenido
 ============================================================ */
 #hero {
   min-height: 100vh;
@@ -132,44 +190,52 @@ nav ul a:hover {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
 }
 
-#hero p:first-child {
+.hero-eyebrow {
   font-family: var(--fuente-codigo);
   font-size: 0.8rem;
   color: var(--acento);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.2s forwards;
 }
 
-#hero h1 {
+.hero-titulo {
   font-size: clamp(3.5rem, 8vw, 8rem);
-  /* clamp(min, preferido, max): escala el tamaño según la pantalla */
   letter-spacing: -0.02em;
   margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.4s forwards;
 }
 
-#hero h1 em {
+.hero-titulo em {
   font-style: italic;
   color: var(--gris-medio);
 }
 
-#hero p:nth-child(3) {
+.hero-desc {
   font-size: 1.1rem;
   color: var(--gris-medio);
   max-width: 500px;
   margin-bottom: 3rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.6s forwards;
 }
 
-#hero div {
+.hero-ctas {
   display: flex;
   gap: 1.5rem;
   align-items: center;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.8s forwards;
 }
 
-/* Botón principal */
-#hero a:nth-child(1) {
+/* Boton principal: fondo acento, texto negro */
+.btn-primario {
   background: var(--acento);
   color: var(--negro);
   padding: 1rem 2.5rem;
@@ -179,15 +245,16 @@ nav ul a:hover {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: inline-block;
 }
 
-#hero a:nth-child(1):hover {
+.btn-primario:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(200, 255, 0, 0.3);
+  box-shadow: 0 8px 30px rgba(200,255,0,0.3);
 }
 
-/* Botón secundario */
-#hero a:nth-child(2) {
+/* Boton secundario: solo borde inferior */
+.btn-secundario {
   font-family: var(--fuente-codigo);
   font-size: 0.85rem;
   letter-spacing: 0.08em;
@@ -195,95 +262,43 @@ nav ul a:hover {
   border-bottom: 1px solid var(--gris-oscuro);
   padding-bottom: 2px;
   transition: border-color 0.3s ease;
+  display: inline-block;
 }
 
-#hero a:nth-child(2):hover {
-  border-color: var(--blanco);
-}
+.btn-secundario:hover { border-color: var(--blanco); }
 
-/* ============================================================
-   DIVISOR entre secciones
-============================================================ */
-.divisor {
-  width: 100%;
-  height: 1px;
-  background: var(--gris-oscuro);
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* ============================================================
-   ETIQUETAS DE SECCIÓN (// 01 — sobre mí)
-============================================================ */
-.seccion-label, section > p:first-child {
-  font-family: var(--fuente-codigo);
-  font-size: 0.75rem;
-  color: var(--acento);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 1.5rem;
-}
-
-section h2 {
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  margin-bottom: 1.5rem;
-}
-
-section h2 em {
-  font-style: italic;
-  color: var(--gris-medio);
-}
-
-/* ============================================================
-   FOOTER
-============================================================ */
-footer {
-  border-top: 1px solid var(--gris-oscuro);
-  padding: 2rem 4rem;
+/* Linea decorativa vertical derecha del hero
+   writing-mode: vertical-rl -> texto en vertical */
+.hero-linea {
+  position: absolute;
+  right: 4rem;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  gap: 1rem;
+  opacity: 0;
+  animation: fadeIn 1s ease 1.2s forwards;
+}
+
+.hero-linea span {
   font-family: var(--fuente-codigo);
-  font-size: 0.75rem;
-  color: var(--gris-oscuro);
-  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  color: var(--gris-medio);
+  letter-spacing: 0.2em;
+  writing-mode: vertical-rl;
+}
+
+.hero-linea::before {
+  content: '';
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--gris-medio));
 }
 
 /* ============================================================
-   RESPONSIVE — pantallas pequeñas
-   @media: aplica estos estilos solo si la pantalla
-   es menor de 768px (tablets y móviles)
-============================================================ */
-@media (max-width: 768px) {
-  nav {
-    padding: 1.2rem 1.5rem;
-  }
-
-  nav ul {
-    display: none;
-  }
-
-  #hero {
-    padding: 0 1.5rem;
-  }
-
-  section {
-    padding: 5rem 1.5rem;
-  }
-
-  footer {
-    padding: 2rem 1.5rem;
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-}
-
-/* ============================================================
-   SOBRE MÍ
-   display: grid → divide la sección en dos columnas iguales
-   gap → espacio entre columnas
-   align-items: center → centra verticalmente el contenido
+   SOBRE MI
 ============================================================ */
 #sobre {
   display: grid;
@@ -292,26 +307,21 @@ footer {
   align-items: center;
 }
 
-#sobre p {
+.sobre-texto p {
   color: var(--gris-medio);
   margin-bottom: 1rem;
-  font-size: 1rem;
 }
 
-#sobre p strong {
-  color: var(--blanco);
-  font-weight: 400;
-}
+.sobre-texto p strong { color: var(--blanco); font-weight: 400; }
 
-/* Tags de tecnologías */
-#sobre ul {
+.tech-stack {
   display: flex;
-  flex-wrap: wrap; /* si no caben en una línea, saltan a la siguiente */
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 2rem;
 }
 
-#sobre ul li {
+.tech-stack li {
   font-family: var(--fuente-codigo);
   font-size: 0.75rem;
   color: var(--gris-medio);
@@ -321,13 +331,9 @@ footer {
   transition: all 0.3s ease;
 }
 
-#sobre ul li:hover {
-  color: var(--acento);
-  border-color: var(--acento);
-}
+.tech-stack li:hover { color: var(--acento); border-color: var(--acento); }
 
-/* Grid de stats (DAW, VLC, IA, ∞) */
-#sobre > div:last-child {
+.sobre-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1px;
@@ -335,12 +341,9 @@ footer {
   border: 1px solid var(--gris-oscuro);
 }
 
-#sobre > div:last-child > div {
-  background: var(--negro);
-  padding: 2rem;
-}
+.stat { background: var(--negro); padding: 2rem; }
 
-#sobre > div:last-child strong {
+.stat strong {
   display: block;
   font-family: var(--fuente-titulo);
   font-size: 2.5rem;
@@ -350,27 +353,42 @@ footer {
   font-weight: 400;
 }
 
-#sobre > div:last-child p {
+.stat p {
   font-family: var(--fuente-codigo);
   font-size: 0.75rem;
   color: var(--gris-medio);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  margin: 0;
 }
 
 /* ============================================================
    SERVICIOS
-   Tres columnas con borde entre ellas.
-   gap: 1px + background en el grid = líneas divisorias
 ============================================================ */
-#servicios {
+.servicios-wrapper {
   background: var(--gris-oscuro);
+}
+
+.servicios-wrapper section {
   max-width: 100%;
   padding: 8rem 4rem;
 }
 
-#servicios > div:last-child {
+.servicios-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 0;
+}
+
+.servicios-sub {
+  color: var(--gris-medio);
+  max-width: 350px;
+  font-size: 0.95rem;
+}
+
+.servicios-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1px;
@@ -386,8 +404,6 @@ footer {
   transition: background 0.3s ease;
 }
 
-/* Línea acento que aparece arriba al hacer hover
-   scaleX(0) → invisible | scaleX(1) → visible */
 .servicio-card::before {
   content: '';
   position: absolute;
@@ -398,11 +414,9 @@ footer {
   transition: transform 0.4s ease;
 }
 
-.servicio-card:hover::before {
-  transform: scaleX(1);
-}
+.servicio-card:hover::before { transform: scaleX(1); }
 
-.servicio-card > span:first-child {
+.servicio-num {
   display: block;
   font-family: var(--fuente-codigo);
   font-size: 0.75rem;
@@ -410,10 +424,7 @@ footer {
   margin-bottom: 1.5rem;
 }
 
-.servicio-card h3 {
-  font-size: 1.6rem;
-  margin-bottom: 1rem;
-}
+.servicio-card h3 { font-size: 1.6rem; margin-bottom: 1rem; }
 
 .servicio-card p {
   font-size: 0.9rem;
@@ -422,7 +433,7 @@ footer {
   margin-bottom: 1.5rem;
 }
 
-.servicio-card > span:last-child {
+.servicio-precio {
   font-family: var(--fuente-codigo);
   font-size: 0.85rem;
   color: var(--acento);
@@ -431,10 +442,17 @@ footer {
 
 /* ============================================================
    PROYECTOS
-   Dos columnas. El número grande de fondo es decorativo,
-   pointer-events: none → no interfiere con los clics
 ============================================================ */
-#proyectos > div:last-child {
+.proyectos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 4rem;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.proyectos-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1px;
@@ -449,11 +467,21 @@ footer {
   transition: background 0.3s ease;
 }
 
-.proyecto-card:hover {
-  background: #111;
+.proyecto-card:hover { background: #111; }
+
+/* Numero decorativo de fondo
+   pointer-events: none -> no interfiere con clics */
+.proyecto-bg-num {
+  position: absolute;
+  top: -1rem; right: 1.5rem;
+  font-family: var(--fuente-titulo);
+  font-size: 8rem;
+  color: rgba(255,255,255,0.02);
+  line-height: 1;
+  pointer-events: none;
 }
 
-.proyecto-card > p:first-child {
+.proyecto-tipo {
   font-family: var(--fuente-codigo);
   font-size: 0.72rem;
   color: var(--acento);
@@ -462,10 +490,7 @@ footer {
   margin-bottom: 1rem;
 }
 
-.proyecto-card h3 {
-  font-size: 1.8rem;
-  margin-bottom: 0.75rem;
-}
+.proyecto-card h3 { font-size: 1.8rem; margin-bottom: 0.75rem; }
 
 .proyecto-card > p:nth-child(3) {
   font-size: 0.9rem;
@@ -474,14 +499,19 @@ footer {
   line-height: 1.8;
 }
 
-.proyecto-card ul {
+.proyecto-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.proyecto-tags {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
 }
 
-.proyecto-card ul li {
+.proyecto-tags li {
   font-family: var(--fuente-codigo);
   font-size: 0.7rem;
   color: var(--gris-medio);
@@ -489,19 +519,15 @@ footer {
   padding: 0.2rem 0.6rem;
 }
 
-.proyecto-card a {
+.proyecto-link {
   font-family: var(--fuente-codigo);
   font-size: 0.75rem;
-  color: var(--blanco);
   letter-spacing: 0.08em;
   transition: color 0.3s ease;
 }
 
-.proyecto-card a:hover {
-  color: var(--acento);
-}
+.proyecto-link:hover { color: var(--acento); }
 
-/* Card "próximamente" */
 .proyecto-card.coming-soon {
   border: 1px dashed var(--gris-oscuro);
   background: transparent;
@@ -520,6 +546,13 @@ footer {
   text-align: center;
 }
 
+.proyecto-card.coming-soon span {
+  color: var(--acento);
+  font-size: 1.5rem;
+  display: block;
+  margin-top: 0.5rem;
+}
+
 /* ============================================================
    CONTACTO
 ============================================================ */
@@ -529,12 +562,14 @@ footer {
   padding: 8rem 4rem;
 }
 
-#contacto h2 {
+.contacto-titulo {
   font-size: clamp(3rem, 7vw, 7rem);
   margin-bottom: 2rem;
 }
 
-#contacto > p:nth-child(3) {
+.contacto-titulo em { font-style: italic; color: var(--gris-medio); }
+
+.contacto-sub {
   color: var(--gris-medio);
   font-size: 1rem;
   margin-bottom: 3rem;
@@ -543,27 +578,25 @@ footer {
   margin-right: auto;
 }
 
-#contacto > a {
+.contacto-email {
   font-family: var(--fuente-titulo);
   font-size: clamp(1.2rem, 3vw, 2.2rem);
-  color: var(--blanco);
   border-bottom: 2px solid var(--acento);
   padding-bottom: 4px;
   transition: color 0.3s ease;
+  display: inline-block;
 }
 
-#contacto > a:hover {
-  color: var(--acento);
-}
+.contacto-email:hover { color: var(--acento); }
 
-#contacto > div {
+.contacto-redes {
   display: flex;
   gap: 2rem;
   justify-content: center;
   margin-top: 4rem;
 }
 
-#contacto > div a {
+.contacto-redes a {
   font-family: var(--fuente-codigo);
   font-size: 0.8rem;
   color: var(--gris-medio);
@@ -572,66 +605,39 @@ footer {
   transition: color 0.3s ease;
 }
 
-#contacto > div a:hover {
-  color: var(--acento);
-}
+.contacto-redes a:hover { color: var(--acento); }
 
 /* ============================================================
-   RESPONSIVE — secciones
+   FOOTER
+============================================================ */
+footer {
+  border-top: 1px solid var(--gris-oscuro);
+  padding: 2rem 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--fuente-codigo);
+  font-size: 0.75rem;
+  color: var(--gris-oscuro);
+  letter-spacing: 0.08em;
+}
+
+.footer-acento { color: var(--acento); }
+
+/* ============================================================
+   RESPONSIVE
 ============================================================ */
 @media (max-width: 768px) {
-  #sobre {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
-
-  #servicios {
-    padding: 5rem 1.5rem;
-  }
-
-  #servicios > div:last-child {
-    grid-template-columns: 1fr;
-  }
-
-  #proyectos > div:last-child {
-    grid-template-columns: 1fr;
-  }
-
-  #contacto {
-    padding: 5rem 1.5rem;
-  }
-}
-
-/* ============================================================
-   CURSOR PERSONALIZADO
-   position: fixed    -> siempre en pantalla, ignora el scroll
-   pointer-events: none -> no bloquea clics
-   mix-blend-mode: difference -> efecto visual sobre texto
-   transform: translate(-50%, -50%) -> centra el div en el punto
-============================================================ */
-#cursor {
-  width: 12px;
-  height: 12px;
-  background: var(--acento);
-  border-radius: 50%;
-  position: fixed;
-  top: 0; left: 0;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s ease, height 0.3s ease;
-  mix-blend-mode: difference;
-}
-
-/* Clase reveal: elemento invisible listo para animarse */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-
-/* Cuando JS añade "visible", el elemento aparece */
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+  nav { padding: 1.2rem 1.5rem; }
+  .nav-links { display: none; }
+  #hero { padding: 0 1.5rem; }
+  .hero-linea { display: none; }
+  section { padding: 5rem 1.5rem; }
+  #sobre { grid-template-columns: 1fr; gap: 3rem; }
+  .servicios-wrapper section { padding: 5rem 1.5rem; }
+  .servicios-grid { grid-template-columns: 1fr; }
+  .proyectos-grid { grid-template-columns: 1fr; }
+  .proyectos-header { flex-direction: column; align-items: flex-start; }
+  #contacto { padding: 5rem 1.5rem; }
+  footer { padding: 2rem 1.5rem; flex-direction: column; gap: 1rem; text-align: center; }
 }

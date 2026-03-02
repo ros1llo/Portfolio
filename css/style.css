@@ -278,3 +278,326 @@ footer {
     text-align: center;
   }
 }
+
+/* ============================================================
+   SOBRE MÍ
+   display: grid → divide la sección en dos columnas iguales
+   gap → espacio entre columnas
+   align-items: center → centra verticalmente el contenido
+============================================================ */
+#sobre {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+}
+
+#sobre p {
+  color: var(--gris-medio);
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+#sobre p strong {
+  color: var(--blanco);
+  font-weight: 400;
+}
+
+/* Tags de tecnologías */
+#sobre ul {
+  display: flex;
+  flex-wrap: wrap; /* si no caben en una línea, saltan a la siguiente */
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+#sobre ul li {
+  font-family: var(--fuente-codigo);
+  font-size: 0.75rem;
+  color: var(--gris-medio);
+  border: 1px solid var(--gris-oscuro);
+  padding: 0.4rem 1rem;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+}
+
+#sobre ul li:hover {
+  color: var(--acento);
+  border-color: var(--acento);
+}
+
+/* Grid de stats (DAW, VLC, IA, ∞) */
+#sobre > div:last-child {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--gris-oscuro);
+  border: 1px solid var(--gris-oscuro);
+}
+
+#sobre > div:last-child > div {
+  background: var(--negro);
+  padding: 2rem;
+}
+
+#sobre > div:last-child strong {
+  display: block;
+  font-family: var(--fuente-titulo);
+  font-size: 2.5rem;
+  color: var(--acento);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+}
+
+#sobre > div:last-child p {
+  font-family: var(--fuente-codigo);
+  font-size: 0.75rem;
+  color: var(--gris-medio);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ============================================================
+   SERVICIOS
+   Tres columnas con borde entre ellas.
+   gap: 1px + background en el grid = líneas divisorias
+============================================================ */
+#servicios {
+  background: var(--gris-oscuro);
+  max-width: 100%;
+  padding: 8rem 4rem;
+}
+
+#servicios > div:last-child {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.05);
+  margin-top: 4rem;
+}
+
+.servicio-card {
+  background: var(--negro);
+  padding: 3rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease;
+}
+
+/* Línea acento que aparece arriba al hacer hover
+   scaleX(0) → invisible | scaleX(1) → visible */
+.servicio-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--acento);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.servicio-card:hover::before {
+  transform: scaleX(1);
+}
+
+.servicio-card > span:first-child {
+  display: block;
+  font-family: var(--fuente-codigo);
+  font-size: 0.75rem;
+  color: var(--acento);
+  margin-bottom: 1.5rem;
+}
+
+.servicio-card h3 {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+}
+
+.servicio-card p {
+  font-size: 0.9rem;
+  color: var(--gris-medio);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.servicio-card > span:last-child {
+  font-family: var(--fuente-codigo);
+  font-size: 0.85rem;
+  color: var(--acento);
+  letter-spacing: 0.05em;
+}
+
+/* ============================================================
+   PROYECTOS
+   Dos columnas. El número grande de fondo es decorativo,
+   pointer-events: none → no interfiere con los clics
+============================================================ */
+#proyectos > div:last-child {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--gris-oscuro);
+}
+
+.proyecto-card {
+  background: var(--negro);
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease;
+}
+
+.proyecto-card:hover {
+  background: #111;
+}
+
+.proyecto-card > p:first-child {
+  font-family: var(--fuente-codigo);
+  font-size: 0.72rem;
+  color: var(--acento);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.proyecto-card h3 {
+  font-size: 1.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.proyecto-card > p:nth-child(3) {
+  font-size: 0.9rem;
+  color: var(--gris-medio);
+  margin-bottom: 2rem;
+  line-height: 1.8;
+}
+
+.proyecto-card ul {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.proyecto-card ul li {
+  font-family: var(--fuente-codigo);
+  font-size: 0.7rem;
+  color: var(--gris-medio);
+  border: 1px solid var(--gris-oscuro);
+  padding: 0.2rem 0.6rem;
+}
+
+.proyecto-card a {
+  font-family: var(--fuente-codigo);
+  font-size: 0.75rem;
+  color: var(--blanco);
+  letter-spacing: 0.08em;
+  transition: color 0.3s ease;
+}
+
+.proyecto-card a:hover {
+  color: var(--acento);
+}
+
+/* Card "próximamente" */
+.proyecto-card.coming-soon {
+  border: 1px dashed var(--gris-oscuro);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+}
+
+.proyecto-card.coming-soon p {
+  font-family: var(--fuente-codigo);
+  font-size: 0.8rem;
+  color: var(--gris-oscuro);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* ============================================================
+   CONTACTO
+============================================================ */
+#contacto {
+  text-align: center;
+  max-width: 100%;
+  padding: 8rem 4rem;
+}
+
+#contacto h2 {
+  font-size: clamp(3rem, 7vw, 7rem);
+  margin-bottom: 2rem;
+}
+
+#contacto > p:nth-child(3) {
+  color: var(--gris-medio);
+  font-size: 1rem;
+  margin-bottom: 3rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#contacto > a {
+  font-family: var(--fuente-titulo);
+  font-size: clamp(1.2rem, 3vw, 2.2rem);
+  color: var(--blanco);
+  border-bottom: 2px solid var(--acento);
+  padding-bottom: 4px;
+  transition: color 0.3s ease;
+}
+
+#contacto > a:hover {
+  color: var(--acento);
+}
+
+#contacto > div {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-top: 4rem;
+}
+
+#contacto > div a {
+  font-family: var(--fuente-codigo);
+  font-size: 0.8rem;
+  color: var(--gris-medio);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+#contacto > div a:hover {
+  color: var(--acento);
+}
+
+/* ============================================================
+   RESPONSIVE — secciones
+============================================================ */
+@media (max-width: 768px) {
+  #sobre {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  #servicios {
+    padding: 5rem 1.5rem;
+  }
+
+  #servicios > div:last-child {
+    grid-template-columns: 1fr;
+  }
+
+  #proyectos > div:last-child {
+    grid-template-columns: 1fr;
+  }
+
+  #contacto {
+    padding: 5rem 1.5rem;
+  }
+}
